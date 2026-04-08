@@ -1,6 +1,4 @@
-
   name: Test
-
   on:
     workflow_dispatch:
       inputs:
@@ -18,8 +16,7 @@
           required: false
           default: 'test_value'
           type: string
-
-  jobs:
+ jobs:
     test:
       runs-on: ubuntu-latest
 
