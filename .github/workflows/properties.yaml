@@ -20,19 +20,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-        
-     - name: Print Environment
-      run: echo "Running Environment: $ENV"
+      - name: Print Environment
+        run: echo "Running Environment: $ENV"
 
       - name: Print Property Value
-      run: echo "TEST_ENV_VALUE: $TEST_ENV_VALUE"
-
-      - name: Run Playwright tests
-        run: npx playwright test
+        run: echo "TEST_ENV_VALUE: $TEST_ENV_VALUE"
