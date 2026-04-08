@@ -8,7 +8,11 @@ jobs:
       ENV: QA
       TEST_ENV_VALUE: test_value
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
       - name: Print Environment
         run: echo "Running Environment: $ENV"
+
       - name: Print Property Value
         run: echo "TEST_ENV_VALUE: $TEST_ENV_VALUE"
