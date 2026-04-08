@@ -1,0 +1,14 @@
+name: Test
+  on:
+    workflow_dispatch:
+  jobs:
+    test:
+      runs-on: ubuntu-latest
+      env:
+        ENV: QA
+        TEST_ENV_VALUE: test_value
+      steps:
+        - name: Print Environment
+          run: echo "Running Environment: $ENV"
+        - name: Print Property Value
+          run: echo "TEST_ENV_VALUE: $TEST_ENV_VALUE"
