@@ -1,0 +1,38 @@
+name: Property Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Environment'
+        required: true
+        default: QA
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      ENV: ${{ github.event.inputs.environment }}
+      TEST_ENV_VALUE: ${{ secrets.TEST_ENV_VALUE }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Print Environment
+        run: echo "Running Environment: $ENV"
+
+      - name: Print Property Value
+        run: echo "TEST_ENV_VALUE: $TEST_ENV_VALUE"
+
+      - name: Run Playwright tests
+        run: npx playwright test
