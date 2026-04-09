@@ -28,27 +28,51 @@ jobs:
           echo "FEATURE_FLAG=${{ env.properties.FEATURE_FLAG.value }}" >> $GITHUB_ENV
           echo "RETRY_COUNT=${{ env.properties.RETRY_COUNT.value }}" >> $GITHUB_ENV
 
-      - name: Validate properties
+      - name: Validate properties and generate report
         run: |
-          echo "String Value: $TEST_ENV_VALUE"
-          echo "Boolean Value: $FEATURE_FLAG"
-          echo "Number Value: $RETRY_COUNT"
+          REPORT_FILE=validation_report.txt
+          STATUS=0
 
-          # String validation
-          [ "$TEST_ENV_VALUE" = "test_value" ] && echo "String OK" || exit 1
+          echo "Property Validation Report" > $REPORT_FILE
+          echo "==========================" >> $REPORT_FILE
 
-          # Boolean validation
+          echo "String Value: $TEST_ENV_VALUE" >> $REPORT_FILE
+          if [ "$TEST_ENV_VALUE" = "test_value" ]; then
+            echo "String Validation: PASS" >> $REPORT_FILE
+          else
+            echo "String Validation: FAIL" >> $REPORT_FILE
+            STATUS=1
+          fi
+
+          echo "" >> $REPORT_FILE
+
+          echo "Boolean Value: $FEATURE_FLAG" >> $REPORT_FILE
           if [ "$FEATURE_FLAG" = "true" ] || [ "$FEATURE_FLAG" = "false" ]; then
-            echo "Boolean OK"
+            echo "Boolean Validation: PASS" >> $REPORT_FILE
           else
-            exit 1
+            echo "Boolean Validation: FAIL" >> $REPORT_FILE
+            STATUS=1
           fi
 
-          # Number validation
+          echo "" >> $REPORT_FILE
+
+          echo "Number Value: $RETRY_COUNT" >> $REPORT_FILE
           if [[ "$RETRY_COUNT" =~ ^[0-9]+$ ]]; then
-            echo "Number OK"
+            echo "Number Validation: PASS" >> $REPORT_FILE
           else
-            exit 1
+            echo "Number Validation: FAIL" >> $REPORT_FILE
+            STATUS=1
           fi
-        
 
+          echo "==========================" >> $REPORT_FILE
+
+          cat $REPORT_FILE
+
+          exit $STATUS
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: property-validation-report
+          path: validation_report.txt
